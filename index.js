@@ -45,12 +45,15 @@ app.use(articulosfamiliasRouter);
 const articulosRouter = require("./routes/articulos");
 app.use(articulosRouter);
 
+const empleadosRouter = require("./routes/empleados");
+app.use(empleadosRouter);
+
 const seguridadRouter = require("./routes/seguridad");
 app.use(seguridadRouter);
 
 // levantar servidor
 if (!module.parent) {   // si no es llamado por otro módulo, es decir, si es el módulo principal -> levantamos el servidor
-    const port = process.env.PORT || 3000;   // en producción se usa el puerto de la variable de entorno PORT
+    const port = process.env.PORT || 4000;   // en producción se usa el puerto de la variable de entorno PORT
     app.locals.fechaInicio = new Date();
     app.listen(port, () => {
       console.log(`sitio escuchando en el puerto ${port}`);

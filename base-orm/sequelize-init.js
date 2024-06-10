@@ -147,8 +147,75 @@ const articulos = sequelize.define(
   }
 );
 
+
+const empleados = sequelize.define('empleados', {
+  IdEmpleado: {
+    type: DataTypes.INTEGER,
+    primaryKey: true,
+    autoIncrement: true,
+  },  
+  ApellidoYNombre: {
+    type: DataTypes.STRING(50),
+    allowNull: false,
+    validate: {
+      notEmpty: {
+        args: true,
+        msg: "Apellido y Nombre es requerido",
+      },
+      len: {
+        args: [5, 60],
+        msg: "Apellido y Nombre debe ser tipo caracteres, entre 5 y 50 de longitud",
+      },
+    },
+  },
+  Dni: {
+    type: DataTypes.INTEGER,    
+    notNull: {
+      args: true,
+      msg: "DNI es requerido",
+    },
+    unique: {
+      args: true,
+      msg: "Este DNI ya existe en la tabla!",
+    }       
+  },
+  FechaNacimiento: {
+    type: DataTypes.DATEONLY,
+    allowNull: false,
+    notNull: {
+      args: true,
+      msg: "Fecha Nacimiento es requerido",
+    }
+
+  },
+  Suspendido: {
+    type: DataTypes.BOOLEAN,
+    allowNull: false,
+    defaultValue: false,
+    notNull: {
+      args: true,
+      msg: "Suspendido requerido",
+    }    
+  }
+},
+{
+  // pasar a mayusculas
+  hooks: {
+    beforeValidate: function (empleado, options) {
+      if (typeof empleado.ApellidoYNombre === "string") {
+        empleado.ApellidoYNombre = empleado.ApellidoYNombre.toUpperCase().trim();
+      }
+    },
+  },
+
+  timestamps: false,
+}
+
+);
+
 module.exports = {
   sequelize,
   articulosfamilias,
   articulos,
+  empleados
 };

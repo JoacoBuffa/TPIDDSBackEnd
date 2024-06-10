@@ -61,6 +61,24 @@ async function CrearBaseSiNoExiste() {
     );
     console.log("tabla articulos creada!");
 
+    existe = false;
+    sql =
+      "SELECT count(*) as contar FROM sqlite_schema WHERE type = 'table' and name= 'empleados'";
+    res = await db.get(sql, []);
+    if (res.contar > 0) existe = true;
+    if (!existe) {
+        await db.run(
+          `CREATE TABLE empleados (
+              IdEmpleado INTEGER PRIMARY KEY AUTOINCREMENT,
+              ApellidoYNombre VARCHAR(50) NOT NULL,
+              Dni INTEGER UNIQUE NOT NULL,
+              FechaNacimiento DATE NOT NULL,
+              Suspendido BOOLEAN NOT NULL DEFAULT 0
+            );`
+          );
+          console.log("tabla empleados creada!");
+        }
+
     await db.run(
       `insert into articulos values
       (1,'KIT DIRECT TV PREPA 0.60MT',299.00, '0779815559001', 10, 329,'2017-01-19', 1 ),
@@ -255,6 +273,19 @@ async function CrearBaseSiNoExiste() {
       (201,'LIMPIADOR LCD SV 8410 ONE FOR ALL',102.00, '0871618404333', 1, 186,'2017-02-02', 1 )
       ;`
     );
+
+    await db.run(`INSERT INTO empleados (ApellidoYNombre, Dni, FechaNacimiento, Suspendido)
+    VALUES
+      ('PEREZ JUAN', 12345678, '1990-05-15', 0),
+      ('GOMEZ ANA', 87654321, '1985-11-22', 0),
+      ('GONZALEZ PEDRO', 45678912, '1992-09-03', 1),
+      ('RODRIGUEZ MARIA', 23456789, '1988-07-28', 0),
+      ('FERNANDEZ CARLOS', 98765432, '1991-02-10', 0),
+      ('LOPEZ LAURA', 67890123, '1993-12-18', 1),
+      ('MARTINEZ JAVIER', 34567890, '1987-04-05', 0),
+      ('SANCHEZ JULIA', 09876543, '1994-08-25', 0),
+      ('RAMIREZ DIEGO', 56789012, '1989-03-12', 1),
+      ('TORRES SOFIA', 21098765, '1986-06-30', 0);`)
   }
 
   // cerrar la base
