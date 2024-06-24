@@ -72,6 +72,81 @@ async function CrearBaseSiNoExiste() {
       ('Marta López', '1990-07-30', 3, 5, false, null);`
   );
 
+  // CIUDADES
+
+  existe = false;
+  res = await db.get(
+    "SELECT count(*) as contar FROM sqlite_schema WHERE type = 'table' and name= 'ciudades'",
+    []
+  );
+  if (res.contar > 0) existe = true;
+  if (!existe) {
+    await db.run(
+      "CREATE table ciudades( idCiudad INTEGER PRIMARY KEY AUTOINCREMENT, nombreCiudad text NOT NULL UNIQUE);"
+    );
+    console.log("tabla articulosfamilias creada!");
+    await db.run(
+      `insert into ciudades values
+      (1, 'Buenos Aires'),
+      (2, 'Madrid'),
+      (3, 'Barcelona'),
+      (4, 'Turin'),
+      (5, 'Manchester'),
+      (6, 'Munich'),
+      (7, 'Paris'),
+      (8, 'Rio de Janeiro'),
+      (9, 'Londres'),
+      (10, 'Montevideo')
+      ;`
+    );
+  }
+  
+
+  // CLUBES 
+
+  existe = false;
+  res = await db.get(
+    "SELECT count(*) as contar FROM sqlite_schema WHERE type = 'table' and name= 'clubes'",
+    []
+  );
+  if (res.contar > 0) existe = true;
+
+  if (!existe) {
+    await db.run(
+      `CREATE table clubes( 
+              idClub INTEGER PRIMARY KEY AUTOINCREMENT
+            , nombreClub text NOT NULL UNIQUE
+            , fechaCreacion text
+            , torneosGanados integer
+            , activo boolean
+            , idCiudad integer
+            , FOREIGN KEY (idCiudad) REFERENCES ciudades(idCiudad)
+            );`
+    );
+    console.log("tabla clubes creada!");
+
+    await db.run(
+      `insert into clubes values
+      (1, 'Club Atlético Boca Juniors', '1905-04-03', 68, 1, 1),
+      (2, 'Club Atlético River Plate', '1901-05-25', 66, 1, 1),
+      (3, 'Club de Fútbol Barcelona', '1899-11-29', 96, 1, 3),
+      (4, 'Real Madrid Club de Fútbol', '1902-03-06', 101, 1, 2),
+      (5, 'Manchester United Football Club', '1878-10-15', 66, 1, 5),
+      (6, 'Juventus Football Club', '1897-11-01', 69, 1, 4),
+      (7, 'Bayern Munich', '1900-02-27', 76, 1, 6),
+      (8, 'Paris Saint-Germain', '1970-08-12', 43, 1, 7),
+      (9, 'Flamengo', '1895-11-17', 43, 1, 8),
+      (10, 'Club Atlético de Madrid', '1903-04-26', 42, 1, 2)
+      ;`
+    );
+
+  }
+
+
+
+
+
+
   // Cerrar la base de datos
   await db.close();
 }
