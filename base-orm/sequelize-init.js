@@ -1,221 +1,162 @@
-// configurar ORM sequelize
 const { Sequelize, DataTypes } = require("sequelize");
-//const sequelize = new Sequelize("sqlite:" + process.env.base );
-const sequelize = new Sequelize("sqlite:" + "./.data/pymes.db");
 
-// definicion del modelo de datos
-const articulosfamilias = sequelize.define(
-  "articulosfamilias",
+// Configurar conexión a la base de datos SQLite
+const sequelize = new Sequelize("sqlite:" + "./.data/TPI.db");
+
+// Definición del modelo TipoEntrenador
+const TipoEntrenador = sequelize.define(
+  "TipoEntrenador",
   {
-    IdArticuloFamilia: {
+    id_tipoEntrenador: {
       type: DataTypes.INTEGER,
       primaryKey: true,
       autoIncrement: true,
     },
-    Nombre: {
-      // todo evitar que string autocomplete con espacios en blanco, debería ser varchar sin espacios
-      type: DataTypes.STRING(30),
+    nombreTipoEntrenador: {
+      type: DataTypes.STRING(50),
       allowNull: false,
-      validate: {
-        notEmpty: {
-          args: true,
-          msg: "Nombre es requerido",
-        },
-        len: {
-          args: [5, 30],
-          msg: "Nombre debe ser tipo caracteres, entre 5 y 30 de longitud",
-        },
-      },
-    },
-  },
-  {
-    // pasar a mayusculas
-    hooks: {
-      beforeValidate: function (articulofamilia, options) {
-        if (typeof articulofamilia.Nombre === "string") {
-          articulofamilia.Nombre = articulofamilia.Nombre.toUpperCase().trim();
-        }
-      },
-    },
-
-    timestamps: false,
-  }
-);
-
-const articulos = sequelize.define(
-  "articulos",
-  {
-    IdArticulo: {
-      type: DataTypes.INTEGER,
-      primaryKey: true,
-      autoIncrement: true,
-    },
-    Nombre: {
-      type: DataTypes.STRING(60),
-      allowNull: false,
-      validate: {
-        notEmpty: {
-          args: true,
-          msg: "Nombre es requerido",
-        },
-        len: {
-          args: [5, 60],
-          msg: "Nombre debe ser tipo caracteres, entre 5 y 60 de longitud",
-        },
-      },
       unique: {
         args: true,
-        msg: "este Nombre ya existe en la tabla!",
+        msg: "Este tipo de entrenador ya existe",
       },
-    },
-    Precio: {
-      type: DataTypes.DECIMAL(10, 2),
-      allowNull: false,
       validate: {
-        notNull: {
+        notEmpty: {
           args: true,
-          msg: "Precio es requerido",
-        }
-      }
-    },
-    CodigoDeBarra: {
-      type: DataTypes.STRING(13),
-      allowNull: false,
-      validate: {
-        notNull: {
-          args: true,
-          msg: "Codigo De Barra es requerido",
+          msg: "Nombre del tipo de entrenador es requerido",
         },
-        is: {
-          args: ["^[0-9]{13}$", "i"],
-          msg: "Codigo de Barra debe ser numérico de 13 digitos",
+        len: {
+          args: [3, 50],
+          msg: "Nombre del tipo de entrenador debe tener entre 3 y 50 caracteres",
         },
       },
-    },
-    IdArticuloFamilia: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      validate: {
-        notNull: {
-          args: true,
-          msg: "IdArticuloFamilia es requerido",
-        }
-      }
-    },
-    Stock: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      validate: {
-        notNull: {
-          args: true,
-          msg: "Stock es requerido",
-        }
-      }
-    },
-    FechaAlta: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      validate: {
-        notNull: {
-          args: true,
-          msg: "Fecha Alta es requerido",
-        }
-      }
-    },
-    Activo: {
-      type: DataTypes.BOOLEAN,
-      allowNull: false,
-      validate: {
-        notNull: {
-          args: true,
-          msg: "Activo es requerido",
-        }
-      }
     },
   },
   {
-    // pasar a mayusculas
     hooks: {
-      beforeValidate: function (articulo, options) {
-        if (typeof articulo.Nombre === "string") {
-          articulo.Nombre = articulo.Nombre.toUpperCase().trim();
+      beforeValidate: function (tipoEntrenador, options) {
+        if (typeof tipoEntrenador.nombreTipoEntrenador === "string") {
+          tipoEntrenador.nombreTipoEntrenador =
+            tipoEntrenador.nombreTipoEntrenador.trim();
         }
       },
     },
-
     timestamps: false,
   }
 );
 
-
-const empleados = sequelize.define('empleados', {
-  IdEmpleado: {
-    type: DataTypes.INTEGER,
-    primaryKey: true,
-    autoIncrement: true,
-  },  
-  ApellidoYNombre: {
-    type: DataTypes.STRING(50),
-    allowNull: false,
-    validate: {
-      notEmpty: {
+// Definición del modelo entrenadores
+const entrenadores = sequelize.define(
+  "entrenadores",
+  {
+    id_Entrenador: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      autoIncrement: true,
+    },
+    nombreEntrenador: {
+      type: DataTypes.STRING(50),
+      allowNull: false,
+      unique: {
         args: true,
-        msg: "Apellido y Nombre es requerido",
+        msg: "Este entrenador ya existe",
       },
-      len: {
-        args: [5, 60],
-        msg: "Apellido y Nombre debe ser tipo caracteres, entre 5 y 50 de longitud",
+      validate: {
+        notEmpty: {
+          args: true,
+          msg: "Nombre del entrenador es requerido",
+        },
+        len: {
+          args: [3, 50],
+          msg: "Nombre del entrenador debe tener entre 3 y 50 caracteres",
+        },
+      },
+    },
+    fechaNacimiento: {
+      type: DataTypes.DATEONLY,
+      allowNull: false,
+      validate: {
+        notNull: {
+          args: true,
+          msg: "Fecha de nacimiento es requerida",
+        },
+        isDate: {
+          args: true,
+          msg: "Fecha de nacimiento debe ser una fecha válida",
+        },
+      },
+    },
+    añosExperiencia: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      validate: {
+        notNull: {
+          args: true,
+          msg: "Años de experiencia son requeridos",
+        },
+        min: {
+          args: 0,
+          msg: "Años de experiencia no pueden ser negativos",
+        },
+      },
+    },
+    id_tipoEntrenador: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      validate: {
+        notNull: {
+          args: true,
+          msg: "Tipo de entrenador es requerido",
+        },
+      },
+    },
+    tieneClub: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: false,
+      validate: {
+        notNull: {
+          args: true,
+          msg: "Campo 'tieneClub' es requerido",
+        },
+      },
+    },
+    clubActual: {
+      type: DataTypes.STRING(50),
+      allowNull: true,
+      validate: {
+        len: {
+          args: [0, 50],
+          msg: "Nombre del club actual debe tener máximo 50 caracteres",
+        },
       },
     },
   },
-  Dni: {
-    type: DataTypes.INTEGER,    
-    notNull: {
-      args: true,
-      msg: "DNI es requerido",
+  {
+    hooks: {
+      beforeValidate: function (entrenador, options) {
+        if (typeof entrenador.nombreEntrenador === "string") {
+          entrenador.nombreEntrenador = entrenador.nombreEntrenador.trim();
+        }
+        if (typeof entrenador.clubActual === "string") {
+          entrenador.clubActual = entrenador.clubActual.trim();
+        }
+      },
     },
-    unique: {
-      args: true,
-      msg: "Este DNI ya existe en la tabla!",
-    }       
-  },
-  FechaNacimiento: {
-    type: DataTypes.DATEONLY,
-    allowNull: false,
-    notNull: {
-      args: true,
-      msg: "Fecha Nacimiento es requerido",
-    }
-
-  },
-  Suspendido: {
-    type: DataTypes.BOOLEAN,
-    allowNull: false,
-    defaultValue: false,
-    notNull: {
-      args: true,
-      msg: "Suspendido requerido",
-    }    
+    timestamps: false,
   }
-},
-{
-  // pasar a mayusculas
-  hooks: {
-    beforeValidate: function (empleado, options) {
-      if (typeof empleado.ApellidoYNombre === "string") {
-        empleado.ApellidoYNombre = empleado.ApellidoYNombre.toUpperCase().trim();
-      }
-    },
-  },
-
-  timestamps: false,
-}
-
 );
+
+// Relación entre entrenadores y TipoEntrenador (opcional)
+entrenadores.belongsTo(TipoEntrenador, {
+  foreignKey: "id_tipoEntrenador",
+  as: "tipoEntrenador",
+});
+
+// Sincronizar modelos con la base de datos (opcional si se quiere crear automáticamente las tablas)
+// sequelize.sync();
 
 module.exports = {
   sequelize,
-  articulosfamilias,
-  articulos,
-  empleados
+  TipoEntrenador,
+  entrenadores,
 };
