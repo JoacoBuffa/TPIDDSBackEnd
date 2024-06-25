@@ -146,6 +146,118 @@ const entrenadores = sequelize.define(
   }
 );
 
+// CIUDADES definicion de modelo 
+
+const ciudades = sequelize.define(
+  "ciudades",
+  {
+    idCiudad: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      autoIncrement: true,
+    },
+    nombreCiudad: {
+      // todo evitar que string autocomplete con espacios en blanco, debería ser varchar sin espacios
+      type: DataTypes.STRING(30),
+      allowNull: false,
+      validate: {
+        notEmpty: {
+          args: true,
+          msg: "Nombre ciudad es requerido",
+        },
+        len: {
+          args: [3, 40],
+          msg: "Nombre ciudad debe ser tipo caracteres, entre 3 y 40 de longitud",
+        },
+      },
+    },
+  } ,
+  {
+
+    timestamps: false,
+  }
+);
+
+// CLUBES definicion de modelo 
+
+const clubes = sequelize.define(
+  "clubes",
+  {
+    idClub: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      autoIncrement: true,
+    },
+    nombreClub: {
+      type: DataTypes.STRING(60),
+      allowNull: false,
+      validate: {
+        notEmpty: {
+          args: true,
+          msg: "Nombre CLUB es requerido",
+        },
+        len: {
+          args: [5, 60],
+          msg: "Nombre CLUB debe ser tipo caracteres, entre 5 y 60 de longitud",
+        },
+      },
+      unique: {
+        args: true,
+        msg: "este Nombre ya existe en la tabla!",
+      },
+    },
+
+    fechaCreacion: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        notNull: {
+          args: true,
+          msg: "fechaCreacion es requerido",
+        }
+      }
+    },
+
+    torneosGanados: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      validate: {
+        notNull: {
+          args: true,
+          msg: "cantidad de torneos ganados es requerido",
+        }
+      }
+    },
+
+    activo: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      validate: {
+        notNull: {
+          args: true,
+          msg: "activo es requerido",
+        }
+      }
+    },
+
+    idCiudad: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      validate: {
+        notNull: {
+          args: true,
+          msg: "idCiudad es requerido",
+        }
+      }
+    },
+  } ,
+  {
+
+    timestamps: false,
+  }
+);
+
+
 // Relación entre entrenadores y TipoEntrenador (opcional)
 entrenadores.belongsTo(TipoEntrenador, {
   foreignKey: "id_tipoEntrenador",
@@ -159,4 +271,6 @@ module.exports = {
   sequelize,
   TipoEntrenador,
   entrenadores,
+  ciudades,
+  clubes
 };

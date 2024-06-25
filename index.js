@@ -14,6 +14,9 @@ app.use(cors()); // Habilitar CORS para todas las rutas
 const tipoEntrenadorRouter = require("./routes/tipoEntrenador"); // Ruta para TipoEntrenador
 const entrenadoresRouter = require("./routes/entrenadores"); // Ruta para entrenadores
 
+const clubesRouter = require("./routes/clubes");
+const ciudadesRouter = require("./routes/ciudades");
+
 // Ruta de inicio
 app.get("/", (req, res) => {
   res.send("dds-backend iniciado!");
@@ -22,6 +25,9 @@ app.get("/", (req, res) => {
 // Middleware para manejar las rutas específicas
 app.use("/api/tipoEntrenador", tipoEntrenadorRouter); // Usar la ruta de TipoEntrenador
 app.use("/api/entrenadores", entrenadoresRouter); // Usar la ruta de entrenadores
+
+app.use(clubesRouter);
+app.use(ciudadesRouter);
 
 // Middleware para manejar archivos estáticos (si es necesario)
 /*
