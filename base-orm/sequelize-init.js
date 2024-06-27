@@ -3,9 +3,9 @@ const { Sequelize, DataTypes } = require("sequelize");
 // Configurar conexión a la base de datos SQLite
 const sequelize = new Sequelize("sqlite:" + "./.data/TPI.db");
 
-// Definición del modelo TipoEntrenador
-const TipoEntrenador = sequelize.define(
-  "TipoEntrenador",
+// Definición del modelo tipoEntrenador
+const tipoEntrenador = sequelize.define(
+  "tipoEntrenador",
   {
     id_tipoEntrenador: {
       type: DataTypes.INTEGER,
@@ -15,10 +15,6 @@ const TipoEntrenador = sequelize.define(
     nombreTipoEntrenador: {
       type: DataTypes.STRING(50),
       allowNull: false,
-      unique: {
-        args: true,
-        msg: "Este tipo de entrenador ya existe",
-      },
       validate: {
         notEmpty: {
           args: true,
@@ -36,7 +32,7 @@ const TipoEntrenador = sequelize.define(
       beforeValidate: function (tipoEntrenador, options) {
         if (typeof tipoEntrenador.nombreTipoEntrenador === "string") {
           tipoEntrenador.nombreTipoEntrenador =
-            tipoEntrenador.nombreTipoEntrenador.trim();
+            tipoEntrenador.nombreTipoEntrenador.toUpperCase().trim();
         }
       },
     },
@@ -56,10 +52,6 @@ const entrenadores = sequelize.define(
     nombreEntrenador: {
       type: DataTypes.STRING(50),
       allowNull: false,
-      unique: {
-        args: true,
-        msg: "Este entrenador ya existe",
-      },
       validate: {
         notEmpty: {
           args: true,
@@ -130,15 +122,24 @@ const entrenadores = sequelize.define(
         },
       },
     },
+    Activo: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      validate: {
+        notNull: {
+          args: true,
+          msg: "Activo es requerido",
+        },
+      },
+    },
   },
   {
     hooks: {
       beforeValidate: function (entrenador, options) {
         if (typeof entrenador.nombreEntrenador === "string") {
-          entrenador.nombreEntrenador = entrenador.nombreEntrenador.trim();
-        }
-        if (typeof entrenador.clubActual === "string") {
-          entrenador.clubActual = entrenador.clubActual.trim();
+          entrenador.nombreEntrenador = entrenador.nombreEntrenador
+            .toUpperCase()
+            .trim();
         }
       },
     },
@@ -146,17 +147,11 @@ const entrenadores = sequelize.define(
   }
 );
 
-// Relación entre entrenadores y TipoEntrenador (opcional)
-entrenadores.belongsTo(TipoEntrenador, {
-  foreignKey: "id_tipoEntrenador",
-  as: "tipoEntrenador",
-});
-
 // Sincronizar modelos con la base de datos (opcional si se quiere crear automáticamente las tablas)
 // sequelize.sync();
 
 module.exports = {
   sequelize,
-  TipoEntrenador,
+  tipoEntrenador,
   entrenadores,
 };

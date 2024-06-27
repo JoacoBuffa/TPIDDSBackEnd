@@ -9,9 +9,10 @@ async function CrearBaseSiNoExiste() {
 
   // Verificar si la tabla TipoEntrenador existe, si no existe, crearla
   existe = false;
-  let sql =
-    "SELECT count(*) as contar FROM sqlite_schema WHERE type = 'table' and name= 'TipoEntrenador'";
-  res = await db.get(sql, []);
+  res = await db.get(
+    "SELECT count(*) as contar FROM sqlite_schema WHERE type = 'table' and name= 'TipoEntrenador'",
+    []
+  );
   if (res.contar > 0) existe = true;
   if (!existe) {
     await db.run(
@@ -21,13 +22,24 @@ async function CrearBaseSiNoExiste() {
             );`
     );
     console.log("Tabla TipoEntrenador creada!");
+
+    await db.run(
+      `INSERT OR IGNORE INTO TipoEntrenador (id_tipoEntrenador, nombreTipoEntrenador)
+      VALUES
+        (1, 'Director Técnico'),
+        (2, 'Preparador Físico'),
+        (3, 'Ayudante de Campo'),
+        (4, 'Analista de Juego'),
+        (5, 'Fisioterapeuta');`
+    );
   }
 
   // Verificar si la tabla entrenadores existe, si no existe, crearla
   existe = false;
-  sql =
-    "SELECT count(*) as contar FROM sqlite_schema WHERE type = 'table' and name= 'entrenadores'";
-  res = await db.get(sql, []);
+  res = await db.get(
+    "SELECT count(*) as contar FROM sqlite_schema WHERE type = 'table' and name= 'entrenadores'",
+    []
+  );
   if (res.contar > 0) existe = true;
   if (!existe) {
     await db.run(
@@ -39,38 +51,27 @@ async function CrearBaseSiNoExiste() {
               id_tipoEntrenador INTEGER,
               tieneClub BOOLEAN,
               clubActual TEXT,
+              Activo boolean,
               FOREIGN KEY (id_tipoEntrenador) REFERENCES TipoEntrenador(id_tipoEntrenador)
             );`
     );
     console.log("Tabla entrenadores creada!");
+    // Insertar entrenadores
+    await db.run(
+      `INSERT INTO entrenadores (nombreEntrenador, fechaNacimiento, añosExperiencia, id_tipoEntrenador, tieneClub, clubActual)
+    VALUES
+      ('Diego Simeone', '1970-04-28', 15, 1, true, 'Atletico de Madrid',1),
+      ('Marcelo Bielsa', '1955-07-21', 25, 1, true, 'Leeds United',1),
+      ('Pep Guardiola', '1971-01-18', 20, 1, true, 'Manchester City',1),
+      ('Juan Carlos Osorio', '1961-06-08', 22, 2, true, 'Atletico Nacional',1),
+      ('Francisco Ayestaran', '1963-02-22', 18, 3, false, 'Barcelona',1),
+      ('Jorge Desio', '1976-08-15', 12, 4, true, 'Real Madrid',1),
+      ('Carlos Velasco Carballo', '1971-03-17', 10, 5, false, 'Racing',1),
+      ('Rafael Guerrero', '1980-09-12', 8, 2, true, 'Sevilla FC',1),
+      ('Pepe Conde', '1985-11-05', 5, 3, false, 'Talleres',1),
+      ('Marta López', '1990-07-30', 3, 5, false, 'Independiente',1);`
+    );
   }
-
-  // Insertar tipos de entrenador si no existen
-  await db.run(
-    `INSERT OR IGNORE INTO TipoEntrenador (id_tipoEntrenador, nombreTipoEntrenador)
-    VALUES
-      (1, 'Director Técnico'),
-      (2, 'Preparador Físico'),
-      (3, 'Ayudante de Campo'),
-      (4, 'Analista de Juego'),
-      (5, 'Fisioterapeuta');`
-  );
-
-  // Insertar entrenadores
-  await db.run(
-    `INSERT INTO entrenadores (nombreEntrenador, fechaNacimiento, añosExperiencia, id_tipoEntrenador, tieneClub, clubActual)
-    VALUES
-      ('Diego Simeone', '1970-04-28', 15, 1, true, 'Atletico de Madrid'),
-      ('Marcelo Bielsa', '1955-07-21', 25, 1, true, 'Leeds United'),
-      ('Pep Guardiola', '1971-01-18', 20, 1, true, 'Manchester City'),
-      ('Juan Carlos Osorio', '1961-06-08', 22, 2, true, 'Atletico Nacional'),
-      ('Francisco Ayestaran', '1963-02-22', 18, 3, false, null),
-      ('Jorge Desio', '1976-08-15', 12, 4, true, 'Real Madrid'),
-      ('Carlos Velasco Carballo', '1971-03-17', 10, 5, false, null),
-      ('Rafael Guerrero', '1980-09-12', 8, 2, true, 'Sevilla FC'),
-      ('Pepe Conde', '1985-11-05', 5, 3, false, null),
-      ('Marta López', '1990-07-30', 3, 5, false, null);`
-  );
 
   // CIUDADES
 
@@ -100,9 +101,8 @@ async function CrearBaseSiNoExiste() {
       ;`
     );
   }
-  
 
-  // CLUBES 
+  // CLUBES
 
   existe = false;
   res = await db.get(
@@ -139,13 +139,7 @@ async function CrearBaseSiNoExiste() {
       (10, 'Club Atlético de Madrid', '1903-04-26', 42, 1, 2)
       ;`
     );
-
   }
-
-
-
-
-
 
   // Cerrar la base de datos
   await db.close();

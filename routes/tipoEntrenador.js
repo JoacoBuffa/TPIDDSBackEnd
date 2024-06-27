@@ -1,36 +1,25 @@
 const express = require("express");
 const router = express.Router();
-const db = require("../base-orm/sequelize-init");
-const { Op, ValidationError } = require("sequelize");
 
-// GET /api/tipoEntrenador
+const db = require("../base-orm/sequelize-init");
+
 router.get("/api/tipoEntrenador", async function (req, res, next) {
-  try {
-    const tiposEntrenador = await db.TipoEntrenador.findAll({
-      attributes: ["id_tipoEntrenador", "nombreTipoEntrenador"],
-      order: [["nombreTipoEntrenador", "ASC"]],
-    });
-    res.json(tiposEntrenador);
-  } catch (err) {
-    next(err);
-  }
+  let data = await db.tipoEntrenador.findAll({
+    attributes: ["id_tipoEntrenador", "nombreTipoEntrenador"],
+  });
+  res.json(data);
 });
 
-// POST /api/tipoEntrenador
-router.post("/api/tipoEntrenador", async (req, res, next) => {
-  try {
-    const tipoEntrenador = await db.TipoEntrenador.create({
-      nombreTipoEntrenador: req.body.nombreTipoEntrenador,
-    });
-    res.status(201).json(tipoEntrenador);
-  } catch (err) {
-    if (err instanceof ValidationError) {
-      const messages = err.errors.map((x) => x.message);
-      res.status(400).json(messages);
-    } else {
-      next(err);
-    }
-  }
+router.get("/api/tipoEntrenador/:id", async function (req, res, next) {
+  // #swagger.tags = ['ArticulosFamilias']
+  // #swagger.summary = 'obtiene un ArticuloFamilia'
+  // #swagger.parameters['id'] = { description: 'identificador del ArticulosFamilias...' }
+  let data = await db.tipoEntrenador.findAll({
+    attributes: ["id_tipoEntrenador", "nombreTipoEntrenador"],
+    where: { id_tipoEntrenador: req.params.id },
+  });
+  if (data.length > 0) res.json(data[0]);
+  else res.status(404).json({ mensaje: "No encontrado!!" });
 });
 
 module.exports = router;
