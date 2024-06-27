@@ -85,7 +85,7 @@ async function CrearBaseSiNoExiste() {
     await db.run(
       "CREATE table ciudades( idCiudad INTEGER PRIMARY KEY AUTOINCREMENT, nombreCiudad text NOT NULL UNIQUE);"
     );
-    console.log("tabla articulosfamilias creada!");
+    console.log("tabla ciudades creada!");
     await db.run(
       `insert into ciudades values
       (1, 'Buenos Aires'),
