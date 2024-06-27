@@ -8,34 +8,14 @@ require("./base-orm/sqlite-init"); // crear base si no existe
 app.use(express.json()); // para poder leer json en el body
 
 const cors = require("cors");
-const path = require("path");
-const sequelizeInit = require("./base-orm/sequelize-init"); // Inicialización de Sequelize
-const sqliteInit = require("./base-orm/sqlite-init"); // Inicialización de SQLite
+app.use(
+  cors({
+    origin: "*", // origin: 'https://dds-frontend.azurewebsites.net'
+  })
+);
 
-// Middleware
-app.use(express.json()); // Para parsear JSON en el body de las peticiones
-app.use(cors()); // Habilitar CORS para todas las rutas
-
-// Rutas
-
-const tipoEntrenadorRouter = require("./routes/tipoEntrenador"); // Ruta para TipoEntrenador
-const entrenadoresRouter = require("./routes/entrenadores"); // Ruta para entrenadores
-
-const clubesRouter = require("./routes/clubes");
-const ciudadesRouter = require("./routes/ciudades");
-
-// Ruta de inicio
-app.get("/", (req, res) => {
-  res.send("dds-backend iniciado!");
-});
-
-app.use(tipoEntrenadorRouter);
-app.use(entrenadoresRouter);
-
-app.use(clubesRouter);
-app.use(ciudadesRouter);
-
-// Middleware para manejar archivos estáticos (si es necesario)
+// express maneja archivos estaticos, esto nos permite unir al backend el codigo del frontend (que es estatico)
+// lo cual lo logramos con al colocar el contenido del build de react en la carpeta public
 /*
 app.use(express.static('public'));
 const path = require('path'); // Include path module
@@ -54,6 +34,18 @@ app.use((req, res, next) => {
 app.get("/", (req, res) => {
   res.send("dds-backend iniciado!");
 });
+
+const tipoEntrenadorRouter = require("./routes/tipoEntrenador");
+app.use(tipoEntrenadorRouter);
+
+const entrenadoresRouter = require("./routes/entrenadores");
+app.use(entrenadoresRouter);
+
+const clubesRouter = require("./routes/clubes");
+app.use(clubesRouter);
+
+const ciudadesRouter = require("./routes/ciudades");
+app.use(ciudadesRouter);
 
 // levantar servidor
 if (!module.parent) {

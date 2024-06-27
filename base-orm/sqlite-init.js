@@ -51,7 +51,7 @@ async function CrearBaseSiNoExiste() {
               id_tipoEntrenador INTEGER,
               tieneClub BOOLEAN,
               clubActual TEXT,
-              Suspendido BOOLEAN NOT NULL DEFAULT 0
+              Suspendido BOOLEAN NOT NULL DEFAULT 0,
               FOREIGN KEY (id_tipoEntrenador) REFERENCES TipoEntrenador(id_tipoEntrenador)
             );`
     );
