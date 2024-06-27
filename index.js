@@ -56,12 +56,6 @@ app.get("/", (req, res) => {
   res.send("dds-backend iniciado!");
 });
 
-const tipoEntrenadorRouter = require("./routes/tipoEntrenador");
-app.use(tipoEntrenadorRouter);
-
-const entrenadoresRouter = require("./routes/entrenadores");
-app.use(entrenadoresRouter);
-
 // levantar servidor
 if (!module.parent) {
   // si no es llamado por otro módulo, es decir, si es el módulo principal -> levantamos el servidor

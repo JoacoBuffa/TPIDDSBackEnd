@@ -257,7 +257,7 @@ const clubes = sequelize.define(
 );
 
 // Relación entre entrenadores y TipoEntrenador (opcional)
-entrenadores.belongsTo(TipoEntrenador, {
+entrenadores.belongsTo(tipoEntrenador, {
   foreignKey: "id_tipoEntrenador",
   as: "tipoEntrenador",
 });

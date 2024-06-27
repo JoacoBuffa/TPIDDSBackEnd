@@ -58,18 +58,18 @@ async function CrearBaseSiNoExiste() {
     console.log("Tabla entrenadores creada!");
     // Insertar entrenadores
     await db.run(
-      `INSERT INTO entrenadores (nombreEntrenador, fechaNacimiento, añosExperiencia, id_tipoEntrenador, tieneClub, clubActual)
+      `INSERT INTO entrenadores (id_Entrenador, nombreEntrenador, fechaNacimiento, añosExperiencia, id_tipoEntrenador, tieneClub, clubActual, Activo)
     VALUES
-      ('Diego Simeone', '1970-04-28', 15, 1, true, 'Atletico de Madrid',1),
-      ('Marcelo Bielsa', '1955-07-21', 25, 1, true, 'Leeds United',1),
-      ('Pep Guardiola', '1971-01-18', 20, 1, true, 'Manchester City',1),
-      ('Juan Carlos Osorio', '1961-06-08', 22, 2, true, 'Atletico Nacional',1),
-      ('Francisco Ayestaran', '1963-02-22', 18, 3, false, 'Barcelona',1),
-      ('Jorge Desio', '1976-08-15', 12, 4, true, 'Real Madrid',1),
-      ('Carlos Velasco Carballo', '1971-03-17', 10, 5, false, 'Racing',1),
-      ('Rafael Guerrero', '1980-09-12', 8, 2, true, 'Sevilla FC',1),
-      ('Pepe Conde', '1985-11-05', 5, 3, false, 'Talleres',1),
-      ('Marta López', '1990-07-30', 3, 5, false, 'Independiente',1);`
+      (1,'Diego Simeone', '1970-04-28', 15, 1, true, 'Atletico de Madrid',1),
+      (2,'Marcelo Bielsa', '1955-07-21', 25, 1, true, 'Leeds United',1),
+      (3,'Pep Guardiola', '1971-01-18', 20, 1, true, 'Manchester City',1),
+      (4,'Juan Carlos Osorio', '1961-06-08', 22, 2, true, 'Atletico Nacional',1),
+      (5,'Francisco Ayestaran', '1963-02-22', 18, 3, false, 'Barcelona',1),
+      (6,'Jorge Desio', '1976-08-15', 12, 4, true, 'Real Madrid',1),
+      (7,'Carlos Velasco Carballo', '1971-03-17', 10, 5, false, 'Racing',1),
+      (8,'Rafael Guerrero', '1980-09-12', 8, 2, true, 'Sevilla FC',1),
+      (9,'Pepe Conde', '1985-11-05', 5, 3, false, 'Talleres',1),
+      (10,'Marta López', '1990-07-30', 3, 5, false, 'Independiente',1);`
     );
   }
 
