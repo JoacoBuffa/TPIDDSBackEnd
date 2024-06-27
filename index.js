@@ -29,9 +29,8 @@ app.get("/", (req, res) => {
   res.send("dds-backend iniciado!");
 });
 
-// Middleware para manejar las rutas específicas
-app.use("/api/tipoEntrenador", tipoEntrenadorRouter); // Usar la ruta de TipoEntrenador
-app.use("/api/entrenadores", entrenadoresRouter); // Usar la ruta de entrenadores
+app.use(tipoEntrenadorRouter);
+app.use(entrenadoresRouter);
 
 app.use(clubesRouter);
 app.use(ciudadesRouter);
@@ -59,7 +58,7 @@ app.get("/", (req, res) => {
 // levantar servidor
 if (!module.parent) {
   // si no es llamado por otro módulo, es decir, si es el módulo principal -> levantamos el servidor
-  const port = process.env.PORT || 3000; // en producción se usa el puerto de la variable de entorno PORT
+  const port = process.env.PORT || 4000; // en producción se usa el puerto de la variable de entorno PORT
   app.locals.fechaInicio = new Date();
   app.listen(port, () => {
     console.log(`sitio escuchando en el puerto ${port}`);
