@@ -122,14 +122,13 @@ const entrenadores = sequelize.define(
         },
       },
     },
-    Activo: {
+    Suspendido: {
       type: DataTypes.BOOLEAN,
       allowNull: false,
-      validate: {
-        notNull: {
-          args: true,
-          msg: "Activo es requerido",
-        },
+      defaultValue: false,
+      notNull: {
+        args: true,
+        msg: "Suspendido requerido",
       },
     },
   },
