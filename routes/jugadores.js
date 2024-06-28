@@ -3,38 +3,38 @@ const router = express.Router();
 const db = require("../base-orm/sequelize-init");
 const { Op, ValidationError } = require("sequelize");
 
-router.get("/api/jugadores", async function (req, res, next) {
-  let where = {};
-  if (
-    req.query.NombreApellido != undefined &&
-    req.query.NombreApellido !== ""
-  ) {
-    where.NombreApellido = {
-      [Op.like]: "%" + req.query.NombreApellido + "%",
-    };
-  }
-  if (req.query.Activo != undefined && req.query.Activo !== "") {
-    // true o false en el modelo, en base de datos es 1 o 0
-    // convertir el string a booleano
-    where.Activo = req.query.Activo === "true";
-  }
-  const Pagina = req.query.Pagina ?? 1;
-  const TamañoPagina = 10;
-  const { count, rows } = await db.jugadores.findAndCountAll({
-    attributes: [
-      "IdJugador",
-      "NombreApellido",
-      "Dni",
-      "FechaNacimiento",
-      "Peso",
-      "Altura",
-      "IdPosicion",
-      "Activo",
-    ],
-    order: [["NombreApellido", "ASC"]],
-  });
 
-  return res.json({ Items: rows, RegistrosTotal: count });
+router.get("/api/jugadores", async function (req, res) {
+  try {
+    let where = {};
+    if (req.query.NombreApellido != undefined && req.query.NombreApellido !== "") {
+      where.NombreApellido = {
+        [Op.like]: "%" + req.query.NombreApellido + "%",
+      };
+    }    
+    const Pagina = req.query.Pagina || 1;
+    const TamañoPagina = 10;    
+    const { count, rows } = await db.jugadores.findAndCountAll({
+        attributes: [
+          "IdJugador",
+          "NombreApellido",
+          "Dni",
+          "FechaNacimiento",
+          "Peso",
+          "Altura",
+          "IdPosicion",
+          "Activo",
+        ],
+        order: [["NombreApellido", "ASC"]],
+        where,
+        offset: (Pagina - 1) * TamañoPagina,
+        limit: TamañoPagina,
+      });
+    
+    return res.json({ Items: rows, RegistrosTotal: count });
+  } catch (error) {
+    return res.status(500).json({ error: 'Error al obtener los jugadores' });
+  }
 });
 
 router.get("/api/jugadores/:id", async function (req, res, next) {
