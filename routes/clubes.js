@@ -34,23 +34,39 @@ router.get('/api/clubes', async (req, res) => {
   }
 });
 
-// Obtener un club por su Id
+// Obtener un empleado por su Id
 router.get('/api/clubes/:id', async (req, res) => {
   try {
     const club = await db.clubes.findByPk(req.params.id);
     if (club) {
       res.json(club);
     } else {
-      res.status(404).json({ error: 'club no encontrado' });
+      res.status(404).json({ error: 'Empleado no encontrado' });
     }
   } catch (error) {
-    res.status(500).json({ error: 'Error al obtener el club' });
+    res.status(500).json({ error: 'Error al obtener el empleado' });
   }
 });
 
+// // Crear un nuevo empleado
+// router.post('/api/empleados', async (req, res) => {
+//   try {
+//     const nuevoEmpleado = await db.empleados.create(req.body);
+//     res.status(200).json(nuevoEmpleado);
+//   } catch (error) {
+//     res.status(400).json({ error: error.message });
+//   }
+// });
 
 // POST MODIFICADO
 router.post("/api/clubes", async (req, res) => {
+  // #swagger.tags = ['Articulos']
+  // #swagger.summary = 'agrega un Articulo'
+  /*    #swagger.parameters['item'] = {
+                in: 'body',
+                description: 'nuevo Artículo',
+                schema: { $ref: '#/definitions/Articulos' }
+    } */
   try {
     let data = await db.clubes.create({
       nombreClub: req.body.nombreClub,
@@ -106,6 +122,32 @@ router.delete('/api/clubes/:id', async (req, res) => {
   } catch (error) {
     res.status(500).json({ error: 'Error al eliminar el club' });
   }
+});
+
+//Modificar el estado de un equipo
+router.put("/api/clubes/suspender/:id", async (req, res) => {
+  try {
+    let item = await db.clubes.findOne({
+      attributes: ["idClub", "activo"],
+      where: { idClub: req.params.id },
+    });
+    if (!item) {
+      res.status(404).json({ message: "club no encontrado" });
+      return;
+    }
+    item.activo = req.body.activo;
+    await item.save();
+
+    res.sendStatus(204);
+  } catch (err) {
+    if (err instanceof ValidationError) {
+      let messages = "";
+      err.errors.forEach((x) => (messages += x.path + ": " + x.message + "\n"));
+      res.status(400).json({ message: messages });
+    } else {
+      throw err;
+    }
+  }
 });
 
 

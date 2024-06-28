@@ -83,11 +83,11 @@ async function CrearBaseSiNoExiste() {
   if (res.contar > 0) existe = true;
   if (!existe) {
     await db.run(
-      `CREATE table ciudades( idCiudad INTEGER PRIMARY KEY AUTOINCREMENT, nombreCiudad text NOT NULL UNIQUE);`
+      "CREATE table ciudades( idCiudad INTEGER PRIMARY KEY AUTOINCREMENT, nombreCiudad text NOT NULL UNIQUE);"
     );
     console.log("tabla ciudades creada!");
     await db.run(
-      `insert into ciudades (idCiudad, nombreCiudad) VALUES
+      `insert into ciudades values
       (1, 'Buenos Aires'),
       (2, 'Madrid'),
       (3, 'Barcelona'),
@@ -97,11 +97,13 @@ async function CrearBaseSiNoExiste() {
       (7, 'Paris'),
       (8, 'Rio de Janeiro'),
       (9, 'Londres'),
-      (10, 'Montevideo');`
+      (10, 'Montevideo')
+      ;`
     );
   }
+  
 
-  // CLUBES
+// CLUBES
 
   existe = false;
   res = await db.get(
@@ -113,19 +115,19 @@ async function CrearBaseSiNoExiste() {
   if (!existe) {
     await db.run(
       `CREATE table clubes( 
-              idClub INTEGER PRIMARY KEY AUTOINCREMENT,
-              nombreClub text NOT NULL UNIQUE,
-              fechaCreacion text,
-              torneosGanados integer,
-              activo boolean,
-              idCiudad integer,
-              FOREIGN KEY (idCiudad) REFERENCES ciudades(idCiudad)
+              idClub INTEGER PRIMARY KEY AUTOINCREMENT
+            , nombreClub text NOT NULL UNIQUE
+            , fechaCreacion text
+            , torneosGanados integer
+            , activo boolean
+            , idCiudad integer
+            , FOREIGN KEY (idCiudad) REFERENCES ciudades(idCiudad)
             );`
     );
     console.log("tabla clubes creada!");
 
     await db.run(
-      `insert into clubes (idClub, nombreClub, fechaCreacion, torneosGanados, activo, idCiudad) VALUES
+      `insert into clubes values
       (1, 'Club Atlético Boca Juniors', '1905-04-03', 68, 1, 1),
       (2, 'Club Atlético River Plate', '1901-05-25', 66, 1, 1),
       (3, 'Club de Fútbol Barcelona', '1899-11-29', 96, 1, 3),
@@ -135,9 +137,14 @@ async function CrearBaseSiNoExiste() {
       (7, 'Bayern Munich', '1900-02-27', 76, 1, 6),
       (8, 'Paris Saint-Germain', '1970-08-12', 43, 1, 7),
       (9, 'Flamengo', '1895-11-17', 43, 1, 8),
-      (10, 'Club Atlético de Madrid', '1903-04-26', 42, 1, 2);`
+      (10, 'Club Atlético de Madrid', '1903-04-26', 42, 1, 2)
+      ;`
     );
+
   }
+
+
+  
 
   // Cerrar la base de datos
   await db.close();
