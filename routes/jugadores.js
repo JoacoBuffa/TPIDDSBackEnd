@@ -124,34 +124,41 @@ router.put("/api/jugadores/:id", async (req, res) => {
 });
 
 router.delete("/api/jugadores/:id", async (req, res) => {
-  let bajaFisica = false;
-
-  if (bajaFisica) {
-    // baja fisica
-    let filasBorradas = await db.jugadores.destroy({
+  try {
+    const numFilasEliminadas = await db.jugadores.destroy({
       where: { IdJugador: req.params.id },
     });
-    if (filasBorradas == 1) res.sendStatus(200);
-    else res.sendStatus(404);
-  } else {
-    // baja lógica
-    try {
-      let data = await db.sequelize.query(
-        "UPDATE jugadores SET Activo = case when Activo = 1 then 0 else 1 end WHERE IdJugador = :IdJugador",
-        {
-          replacements: { IdJugador: +req.params.id },
-        }
-      );
-      res.sendStatus(200);
-    } catch (err) {
-      if (err instanceof ValidationError) {
-        // si son errores de validación, los devolvemos
-        const messages = err.errors.map((x) => x.message);
-        res.status(400).json(messages);
-      } else {
-        // si son errores desconocidos, los dejamos que los controle el middleware de errores
-        throw err;
-      }
+    if (numFilasEliminadas === 1) {
+      res.json({ message: "Jugador eliminado correctamente" });
+    } else {
+      res.status(404).json({ error: "Jugador no encontrado" });
+    }
+  } catch (error) {
+    res.status(500).json({ error: "Error al eliminar el Jugador" });
+  }
+});
+
+router.put("/api/jugadores/suspender/:id", async (req, res) => {
+  try {
+    let item = await db.jugadores.findOne({
+      attributes: ["IdJugador", "activo"],
+      where: { IdJugador: req.params.id },
+    });
+    if (!item) {
+      res.status(404).json({ message: "Jugador no encontrado" });
+      return;
+    }
+    item.activo = req.body.activo;
+    await item.save();
+
+    res.sendStatus(204);
+  } catch (err) {
+    if (err instanceof ValidationError) {
+      let messages = "";
+      err.errors.forEach((x) => (messages += x.path + ": " + x.message + "\n"));
+      res.status(400).json({ message: messages });
+    } else {
+      throw err;
     }
   }
 });

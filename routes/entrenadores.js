@@ -130,14 +130,14 @@ router.delete("/api/entrenadores/:id", async (req, res) => {
 router.put("/api/entrenadores/suspender/:id", async (req, res) => {
   try {
     let item = await db.entrenadores.findOne({
-      attributes: ["id_Entrenador", "Activo"],
+      attributes: ["id_Entrenador", "activo"],
       where: { id_Entrenador: req.params.id },
     });
     if (!item) {
       res.status(404).json({ message: "Entrenador no encontrado" });
       return;
     }
-    item.Activo = req.body.Activo;
+    item.activo = req.body.activo;
     await item.save();
 
     res.sendStatus(204);

@@ -478,10 +478,7 @@ const torneos = sequelize.define(
       type: DataTypes.BOOLEAN,
       allowNull: false,
       validate: {
-        notNull: {
-          args: true,
-          msg: "Finalizado es requerido",
-        },
+       
       },
     },
 
@@ -498,6 +495,8 @@ const torneos = sequelize.define(
   },
   {
     timestamps: false,
+    tableName: "torneos",
+
   }
 );
 
