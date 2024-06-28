@@ -95,43 +95,18 @@ router.post("/api/entrenadores", async (req, res) => {
 // Actualizar un empleado existente
 router.put("/api/entrenadores/:id", async (req, res) => {
   try {
-    let item = await db.equipos.findOne({
-      attributes: [
-        "id_Entrenador",
-        "nombreEntrenador",
-        "fechaNacimiento",
-        "añosExperiencia",
-        "id_tipoEntrenador",
-        "tieneClub",
-        "clubActual",
-        "Activo",
-      ],
-      where: { id_Entrenador: req.params.id },
-    });
-    if (!item) {
-      res.status(404).json({ message: "id_Entrenador no encontrado" });
-      return;
-    }
-    item.nombreEntrenador = req.body.nombreEntrenador;
-    item.fechaNacimiento = req.body.fechaNacimiento;
-    item.añosExperiencia = req.body.añosExperiencia;
-    item.id_tipoEntrenador = req.body.id_tipoEntrenador;
-    item.tieneClub = req.tieneClub.Stock;
-    item.clubActual = req.body.clubActual;
-    item.Activo = req.body.Activo;
-    await item.save();
-
-    res.sendStatus(204);
-  } catch (err) {
-    if (err instanceof ValidationError) {
-      // si son errores de validación, los devolvemos
-      let messages = "";
-      err.errors.forEach((x) => (messages += x.path + ": " + x.message + "\n"));
-      res.status(400).json({ message: messages });
+    const [numFilasActualizadas, entrenadorActualizado] =
+      await db.entrenadores.update(req.body, {
+        where: { id_Entrenador: req.params.id },
+        returning: true,
+      });
+    if (entrenadorActualizado === 1) {
+      res.sendStatus(204);
     } else {
-      // si son errores desconocidos, los dejamos que los controle el middleware de errores
-      throw err;
+      res.status(404).json({ error: "Entrenador no encontrado" });
     }
+  } catch (error) {
+    res.status(400).json({ error: error.message });
   }
 });
 
@@ -152,7 +127,7 @@ router.delete("/api/entrenadores/:id", async (req, res) => {
 });
 
 //Modificar el estado de un equipo
-router.put("/api/entrenadores/activar/:id", async (req, res) => {
+router.put("/api/entrenadores/suspender/:id", async (req, res) => {
   try {
     let item = await db.entrenadores.findOne({
       attributes: ["id_Entrenador", "Activo"],

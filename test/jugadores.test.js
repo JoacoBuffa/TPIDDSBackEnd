@@ -2,21 +2,21 @@ const request = require("supertest");
 const app = require("../index");
 const jugadorAlta = {
   NombreApellido: "Zlatan Ibrahimovic",
-            FechaNacimiento: "1993-01-18",
-            Peso: 90,
-            Altura: 2.8,
-            Activo: 1,
-            IdPosicion: 6
+  FechaNacimiento: "1993-01-18",
+  Peso: 90,
+  Altura: 2.8,
+  Activo: 1,
+  IdPosicion: 6,
 };
 const jugadorModificacion = {
   IdJugador: 3,
-    NombreApellido: "Marcelo Gallardo",
-    FechaNacimiento: "1986-10-27",
-    Dni: 30000000,
-    Activo: 0,
-    Altura: 1.70,
-    Peso: 78.8,
-    IdPosicion: 3
+  NombreApellido: "Marcelo Gallardo",
+  FechaNacimiento: "1986-10-27",
+  Dni: 30000000,
+  Activo: 0,
+  Altura: 1.7,
+  Peso: 78.8,
+  IdPosicion: 3,
 };
 
 // test route/jugadores GET
@@ -30,12 +30,12 @@ describe("GET /api/jugadores", () => {
         Items: expect.arrayContaining([
           expect.objectContaining({
             IdJugador: expect.any(Number),
-                        NombreApellido: expect.any(String),
-                        FechaNacimiento: expect.any(String),
-                        Activo: expect.any(Boolean),
-                        Altura: expect.any(Number),
-                        Peso: expect.any(Number),
-                        IdPosicion: expect.any(Number)
+            NombreApellido: expect.any(String),
+            FechaNacimiento: expect.any(String),
+            Activo: expect.any(Boolean),
+            Altura: expect.any(Number),
+            Peso: expect.any(Number),
+            IdPosicion: expect.any(Number),
           }),
         ]),
         RegistrosTotal: expect.any(Number),
@@ -47,20 +47,21 @@ describe("GET /api/jugadores", () => {
 // test route/jugadores GET
 describe("GET /api/jugadores con filtros", () => {
   it("Deberia devolver los jugadores según filtro ", async () => {
-    const res = await request(app).get("/api/jugadores?NombreApellido=AIRE&Activo=true&Pagina=1");
+    const res = await request(app).get(
+      "/api/jugadores?NombreApellido=AIRE&Activo=true&Pagina=1"
+    );
     expect(res.statusCode).toEqual(200);
 
-    expect(verificarPropiedades(res.body.Items) ).toEqual(true );
-  
+    expect(verificarPropiedades(res.body.Items)).toEqual(true);
+
     function verificarPropiedades(array) {
       for (let i = 0; i < array.length; i++) {
-        if ( !array[i].NombreApellido.includes("AIRE") || !array[i].Activo ) {
+        if (!array[i].NombreApellido.includes("AIRE") || !array[i].Activo) {
           return false;
         }
       }
       return true;
     }
-    
   });
 });
 
@@ -72,12 +73,12 @@ describe("GET /api/jugadores/:id", () => {
     expect(res.body).toEqual(
       expect.objectContaining({
         IdJugador: expect.any(Number),
-                    NombreApellido: expect.any(String),
-                    FechaNacimiento: expect.any(String),
-                    Activo: expect.any(Boolean),
-                    Altura: expect.any(Number),
-                    Peso: expect.any(Number),
-                    IdPosicion: expect.any(Number)
+        NombreApellido: expect.any(String),
+        FechaNacimiento: expect.any(String),
+        Activo: expect.any(Boolean),
+        Altura: expect.any(Number),
+        Peso: expect.any(Number),
+        IdPosicion: expect.any(Number),
       })
     );
   });
@@ -91,12 +92,12 @@ describe("POST /api/jugadores", () => {
     expect(res.body).toEqual(
       expect.objectContaining({
         IdJugador: expect.any(Number),
-                    NombreApellido: expect.any(String),
-                    FechaNacimiento: expect.any(String),
-                    Activo: expect.any(Boolean),
-                    Altura: expect.any(Number),
-                    Peso: expect.any(Number),
-                    IdPosicion: expect.any(Number)
+        NombreApellido: expect.any(String),
+        FechaNacimiento: expect.any(String),
+        Activo: expect.any(Boolean),
+        Altura: expect.any(Number),
+        Peso: expect.any(Number),
+        IdPosicion: expect.any(Number),
       })
     );
   });
