@@ -2,13 +2,13 @@ const express = require("express");
 const router = express.Router();
 const db = require("../base-orm/sequelize-init");
 const { Op, ValidationError } = require("sequelize");
-const auth = require("../seguridad/auth");
-
 
 router.get("/api/jugadores", async function (req, res, next) {
-
   let where = {};
-  if (req.query.NombreApellido != undefined && req.query.NombreApellido !== "") {
+  if (
+    req.query.NombreApellido != undefined &&
+    req.query.NombreApellido !== ""
+  ) {
     where.NombreApellido = {
       [Op.like]: "%" + req.query.NombreApellido + "%",
     };
@@ -30,8 +30,8 @@ router.get("/api/jugadores", async function (req, res, next) {
       "Altura",
       "IdPosicion",
       "Activo",
-        ],
-    order: [["NombreApellido", "ASC"]]
+    ],
+    order: [["NombreApellido", "ASC"]],
   });
 
   return res.json({ Items: rows, RegistrosTotal: count });
@@ -69,9 +69,11 @@ router.post("/api/jugadores/", async (req, res) => {
   } catch (err) {
     if (err instanceof ValidationError) {
       // si son errores de validación, los devolvemos
-      let messages = '';
-      err.errors.forEach((x) => messages += (x.path ?? 'campo') + ": " + x.message + '\n');
-      res.status(400).json({message : messages});
+      let messages = "";
+      err.errors.forEach(
+        (x) => (messages += (x.path ?? "campo") + ": " + x.message + "\n")
+      );
+      res.status(400).json({ message: messages });
     } else {
       // si son errores desconocidos, los dejamos que los controle el middleware de errores
       throw err;
@@ -80,18 +82,17 @@ router.post("/api/jugadores/", async (req, res) => {
 });
 
 router.put("/api/jugadores/:id", async (req, res) => {
-
   try {
     let item = await db.jugadores.findOne({
       attributes: [
-       "IdJugador",
-      "NombreApellido",
-      "Dni",
-      "FechaNacimiento",
-      "Peso",
-      "Altura",
-      "IdPosicion",
-      "Activo",
+        "IdJugador",
+        "NombreApellido",
+        "Dni",
+        "FechaNacimiento",
+        "Peso",
+        "Altura",
+        "IdPosicion",
+        "Activo",
       ],
       where: { IdJugador: req.params.id },
     });
@@ -108,14 +109,13 @@ router.put("/api/jugadores/:id", async (req, res) => {
     item.Activo = req.body.Activo;
     await item.save();
 
-   
     res.sendStatus(204);
   } catch (err) {
     if (err instanceof ValidationError) {
       // si son errores de validación, los devolvemos
-      let messages = '';
-      err.errors.forEach((x) => messages += x.path + ": " + x.message + '\n');
-      res.status(400).json({message : messages});
+      let messages = "";
+      err.errors.forEach((x) => (messages += x.path + ": " + x.message + "\n"));
+      res.status(400).json({ message: messages });
     } else {
       // si son errores desconocidos, los dejamos que los controle el middleware de errores
       throw err;
@@ -124,7 +124,6 @@ router.put("/api/jugadores/:id", async (req, res) => {
 });
 
 router.delete("/api/jugadores/:id", async (req, res) => {
-
   let bajaFisica = false;
 
   if (bajaFisica) {
@@ -157,5 +156,4 @@ router.delete("/api/jugadores/:id", async (req, res) => {
   }
 });
 
-  
 module.exports = router;

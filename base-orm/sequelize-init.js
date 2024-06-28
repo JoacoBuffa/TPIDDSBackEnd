@@ -243,7 +243,6 @@ ciudades.hasOne(clubes, { foreignKey: "idCiudad" });
 entrenadores.belongsTo(tipoEntrenador, { foreignKey: "id_tipoEntrenador" });
 tipoEntrenador.hasOne(entrenadores, { foreignKey: "id_tipoEntrenador" });
 
-
 // Definición del modelo posiciones
 const posiciones = sequelize.define(
   "posiciones",
@@ -301,7 +300,7 @@ const jugadores = sequelize.define(
         msg: "este Nombre y apellido ya existe en la tabla!",
       },
     },
-    Dni: { 
+    Dni: {
       type: DataTypes.INTEGER,
       allowNull: false,
       validate: {
@@ -309,7 +308,7 @@ const jugadores = sequelize.define(
           args: true,
           msg: "DNI es requerido",
         },
-      }
+      },
     },
     FechaNacimiento: {
       type: DataTypes.DATEONLY,
@@ -319,7 +318,7 @@ const jugadores = sequelize.define(
           args: true,
           msg: "Fecha Nacimiento es requerido",
         },
-      }
+      },
     },
     Peso: {
       type: DataTypes.DECIMAL(10, 2),
@@ -328,8 +327,8 @@ const jugadores = sequelize.define(
         notNull: {
           args: true,
           msg: "Peso es requerido",
-        }
-      }
+        },
+      },
     },
     Altura: {
       type: DataTypes.DECIMAL(10, 2),
@@ -338,8 +337,8 @@ const jugadores = sequelize.define(
         notNull: {
           args: true,
           msg: "Altura es requerido",
-        }
-      }
+        },
+      },
     },
     IdPosicion: {
       type: DataTypes.INTEGER,
@@ -348,8 +347,8 @@ const jugadores = sequelize.define(
         notNull: {
           args: true,
           msg: "IdPosicion es requerido",
-        }
-      }
+        },
+      },
     },
     Activo: {
       type: DataTypes.BOOLEAN,
@@ -358,8 +357,8 @@ const jugadores = sequelize.define(
         notNull: {
           args: true,
           msg: "Activo es requerido",
-        }
-      }
+        },
+      },
     },
   },
   {
@@ -367,15 +366,6 @@ const jugadores = sequelize.define(
   }
 );
 
-
-
-
-module.exports = {
-  sequelize,
-  posiciones,
-  jugadores,
-  
-};
 // Sincronizar modelos con la base de datos (opcional si se quiere crear automáticamente las tablas)
 // sequelize.sync();
 
@@ -385,4 +375,6 @@ module.exports = {
   entrenadores,
   ciudades,
   clubes,
+  posiciones,
+  jugadores,
 };
