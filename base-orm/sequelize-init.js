@@ -29,6 +29,7 @@ const tipoEntrenador = sequelize.define(
   },
   {
     timestamps: false,
+    tableName: "tipoEntrenador",
   }
 );
 
@@ -130,7 +131,7 @@ const entrenadores = sequelize.define(
   }
 );
 
-// CIUDADES definicion de modelo 
+// CIUDADES definicion de modelo
 
 const ciudades = sequelize.define(
   "ciudades",
@@ -155,14 +156,13 @@ const ciudades = sequelize.define(
         },
       },
     },
-  } ,
+  },
   {
-
     timestamps: false,
   }
 );
 
-// CLUBES definicion de modelo 
+// CLUBES definicion de modelo
 
 const clubes = sequelize.define(
   "clubes",
@@ -198,8 +198,8 @@ const clubes = sequelize.define(
         notNull: {
           args: true,
           msg: "fechaCreacion es requerido",
-        }
-      }
+        },
+      },
     },
 
     torneosGanados: {
@@ -209,8 +209,8 @@ const clubes = sequelize.define(
         notNull: {
           args: true,
           msg: "cantidad de torneos ganados es requerido",
-        }
-      }
+        },
+      },
     },
 
     activo: {
@@ -220,8 +220,8 @@ const clubes = sequelize.define(
         notNull: {
           args: true,
           msg: "activo es requerido",
-        }
-      }
+        },
+      },
     },
 
     idCiudad: {
@@ -231,12 +231,11 @@ const clubes = sequelize.define(
         notNull: {
           args: true,
           msg: "idCiudad es requerido",
-        }
-      }
+        },
+      },
     },
-  } ,
+  },
   {
-
     timestamps: false,
   }
 );
@@ -245,10 +244,8 @@ clubes.belongsTo(ciudades, { foreignKey: "idCiudad" });
 ciudades.hasOne(clubes, { foreignKey: "idCiudad" });
 
 // Relación entre entrenadores y TipoEntrenador (opcional)
-entrenadores.belongsTo(tipoEntrenador, {
-  foreignKey: "id_tipoEntrenador",
-  as: "tipoEntrenador",
-});
+entrenadores.belongsTo(tipoEntrenador, { foreignKey: "id_tipoEntrenador" });
+tipoEntrenador.hasOne(entrenadores, { foreignKey: "id_tipoEntrenador" });
 
 // Sincronizar modelos con la base de datos (opcional si se quiere crear automáticamente las tablas)
 // sequelize.sync();

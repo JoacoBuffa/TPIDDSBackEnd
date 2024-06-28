@@ -24,8 +24,8 @@ async function CrearBaseSiNoExiste() {
     console.log("Tabla tipoEntrenador creada!");
 
     await db.run(
-      `INSERT INTO tipoEntrenador (id_tipoEntrenador, nombreTipoEntrenador)
-      VALUES
+      `INSERT INTO tipoEntrenador VALUES 
+      
         (1, 'Director Técnico'),
         (2, 'Preparador Físico'),
         (3, 'Ayudante de Campo'),
@@ -60,16 +60,16 @@ async function CrearBaseSiNoExiste() {
     await db.run(
       `INSERT INTO entrenadores (id_Entrenador, nombreEntrenador, fechaNacimiento, añosExperiencia, id_tipoEntrenador, tieneClub, clubActual, Activo)
     VALUES
-      (1, 'Diego Simeone', '1970-04-28', 15, 1, true, 'Atletico de Madrid', 1),
-      (2, 'Marcelo Bielsa', '1955-07-21', 25, 1, true, 'Leeds United', 1),
-      (3, 'Pep Guardiola', '1971-01-18', 20, 1, true, 'Manchester City', 1),
-      (4, 'Juan Carlos Osorio', '1961-06-08', 22, 2, true, 'Atletico Nacional', 1),
-      (5, 'Francisco Ayestaran', '1963-02-22', 18, 3, false, 'Barcelona', 1),
-      (6, 'Jorge Desio', '1976-08-15', 12, 4, true, 'Real Madrid', 1),
-      (7, 'Carlos Velasco Carballo', '1971-03-17', 10, 5, false, 'Racing', 1),
-      (8, 'Rafael Guerrero', '1980-09-12', 8, 2, true, 'Sevilla FC', 1),
-      (9, 'Pepe Conde', '1985-11-05', 5, 3, false, 'Talleres', 1),
-      (10, 'Marta López', '1990-07-30', 3, 5, false, 'Independiente', 1);`
+      (1, 'Diego Simeone', '1970-04-28', 15, 1, 1, 'Atletico de Madrid', 1),
+      (2, 'Marcelo Bielsa', '1955-07-21', 25, 1, 1, 'Leeds United', 1),
+      (3, 'Pep Guardiola', '1971-01-18', 20, 1, 1, 'Manchester City', 1),
+      (4, 'Juan Carlos Osorio', '1961-06-08', 22, 2, 1, 'Atletico Nacional', 1),
+      (5, 'Francisco Ayestaran', '1963-02-22', 18, 3, 0, 'Barcelona', 1),
+      (6, 'Jorge Desio', '1976-08-15', 12, 4, 1, 'Real Madrid', 1),
+      (7, 'Carlos Velasco Carballo', '1971-03-17', 10, 5, 0, 'Racing', 1),
+      (8, 'Rafael Guerrero', '1980-09-12', 8, 2, 1, 'Sevilla FC', 1),
+      (9, 'Pepe Conde', '1985-11-05', 5, 3, 0, 'Talleres', 1),
+      (10, 'Marta López', '1990-07-30', 3, 5, 0, 'Independiente', 1);`
     );
   }
 
@@ -101,9 +101,8 @@ async function CrearBaseSiNoExiste() {
       ;`
     );
   }
-  
 
-// CLUBES
+  // CLUBES
 
   existe = false;
   res = await db.get(
@@ -140,11 +139,7 @@ async function CrearBaseSiNoExiste() {
       (10, 'Club Atlético de Madrid', '1903-04-26', 42, 1, 2)
       ;`
     );
-
   }
-
-
-  
 
   // Cerrar la base de datos
   await db.close();
