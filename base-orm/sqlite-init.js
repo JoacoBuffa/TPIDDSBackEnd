@@ -143,6 +143,61 @@ async function CrearBaseSiNoExiste() {
 
   }
 
+  // Posiciones
+  existe = false;
+  res = await db.get(
+    "SELECT count(*) as contar FROM sqlite_schema WHERE type = 'table' and name= 'posiciones'",
+    []
+  );
+  if (res.contar > 0) existe = true;
+  if (!existe) {
+    await db.run(
+      "CREATE table posiciones( IdPosicion INTEGER PRIMARY KEY AUTOINCREMENT, Nombre text NOT NULL UNIQUE);"
+    );
+    console.log("tabla posiciones creada!");
+    await db.run(
+      "insert into posiciones values	(1,'Arquero'),(2,'Defensor Central'),(3,'Lateral Izquierdo'),(4,'Lateral Derecho'),(5,'Mediocampista Defensivo'),(6,'Mediocampista'),(7,'Mediocampista Ofensivo'),(8,'Extremo Izquierdo'),(9,'Extremo Derecho'),(10,'Delantero Central');"
+    );
+  }
+
+  // JUGADORES
+  existe = false;
+  sql =
+    "SELECT count(*) as contar FROM sqlite_schema WHERE type = 'table' and name= 'jugadores'";
+  res = await db.get(sql, []);
+  if (res.contar > 0) existe = true;
+  if (!existe) {
+    await db.run(
+      `CREATE table jugadores( 
+              IdJugador INTEGER PRIMARY KEY AUTOINCREMENT
+            , NombreApellido text NOT NULL 
+                        , Dni integer
+            , FechaNacimiento text
+            , Peso integer
+                        , Altura integer
+            , IdPosicion integer
+            , Activo boolean,
+            FOREIGN KEY (IdPosicion) REFERENCES posiciones(IdPosicion)
+            );`
+    );
+    console.log("tabla jugadores creada!");
+
+
+    await db.run(
+    `INSERT INTO Jugadores (IdJugador, NombreApellido, FechaNacimiento, Dni, Activo, Altura, Peso, IdPosicion) VALUES
+(1, 'Juan Fernando Quintero', '1993-01-18', 40003000, 1, 1.72, 90, 6),
+(2, 'Radamel Falcao Garcia', '1986-02-19', 40003001, 1, 1.77, 80, 10),
+(3, 'James Rodriguez', '1991-07-12', 40003002, 1, 1.80, 85, 7),
+(4, 'David Ospina', '1988-08-31', 40003003, 1, 1.85, 90, 1),
+(5, 'Yerry Mina', '1994-12-09', 40003004, 1, 1.88, 86, 2),
+(6, 'Alexis McAllister', '1998-12-24', 40003005, 1, 1.85, 90, 6),
+(7, 'Lionel Messi', '1987-06-24', 40003006, 1, 1.70, 75, 10),
+(8, 'Neymar Jr', '1992-02-05', 40003007, 1, 1.75, 80, 9),
+(9, 'Kylian Mbappe', '1998-12-20', 40003008, 1, 1.78, 85, 9),
+(10, 'Cristiano Ronaldo', '1985-02-05', 40003009, 1, 1.85, 90, 10)`
+    )
+  }
+
 
   
 
