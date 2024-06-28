@@ -78,10 +78,6 @@ const entrenadores = sequelize.define(
           args: true,
           msg: "Años de experiencia son requeridos",
         },
-        min: {
-          args: 0,
-          msg: "Años de experiencia no pueden ser negativos",
-        },
       },
     },
     id_tipoEntrenador: {
