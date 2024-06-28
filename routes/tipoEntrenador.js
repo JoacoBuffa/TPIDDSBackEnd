@@ -11,9 +11,6 @@ router.get("/api/tipoEntrenador", async function (req, res, next) {
 });
 
 router.get("/api/tipoEntrenador/:id", async function (req, res, next) {
-  // #swagger.tags = ['ArticulosFamilias']
-  // #swagger.summary = 'obtiene un ArticuloFamilia'
-  // #swagger.parameters['id'] = { description: 'identificador del ArticulosFamilias...' }
   let data = await db.tipoEntrenador.findAll({
     attributes: ["id_tipoEntrenador", "nombreTipoEntrenador"],
     where: { id_tipoEntrenador: req.params.id },

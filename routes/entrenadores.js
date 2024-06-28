@@ -15,10 +15,10 @@ router.get("/api/entrenadores", async (req, res) => {
         [Op.like]: "%" + req.query.nombreEntrenador + "%",
       };
     }
-    if (req.query.Suspendido != undefined && req.query.Suspendido !== "") {
+    if (req.query.Activo != undefined && req.query.Activo !== "") {
       // true o false en el modelo, en base de datos es 1 o 0
       // convertir el string a booleano
-      where.Suspendido = req.query.Suspendido === "true";
+      where.Activo = req.query.Activo === "true";
     }
     const Pagina = req.query.Pagina ?? 1;
     const TamañoPagina = 10;
@@ -31,7 +31,7 @@ router.get("/api/entrenadores", async (req, res) => {
         "id_tipoEntrenador",
         "tieneClub",
         "clubActual",
-        "Suspendido",
+        "Activo",
       ],
       order: [["nombreEntrenador", "ASC"]],
       where,
@@ -47,37 +47,34 @@ router.get("/api/entrenadores", async (req, res) => {
 
 // Obtener un entrenadores por su Id
 router.get("/api/entrenadores/:id", async (req, res) => {
-  try {
-    const entrenador = await db.entrenadores.findByPk(req.params.id);
-    if (entrenador) {
-      res.json(entrenador);
-    } else {
-      res.status(404).json({ error: "entrenador no encontrado" });
-    }
-  } catch (error) {
-    res.status(500).json({ error: "Error al obtener el entrenador" });
-  }
+  let items = await db.entrenadores.findOne({
+    attributes: [
+      "id_Entrenador",
+      "nombreEntrenador",
+      "fechaNacimiento",
+      "añosExperiencia",
+      "id_tipoEntrenador",
+      "tieneClub",
+      "clubActual",
+      "Activo",
+    ],
+    where: { id_Entrenador: req.params.id },
+  });
+  res.json(items);
 });
 
 // Crear un nuevo empleado
 // post d articulos modificado
 router.post("/api/entrenadores", async (req, res) => {
-  // #swagger.tags = ['Articulos']
-  // #swagger.summary = 'agrega un Articulo'
-  /*    #swagger.parameters['item'] = {
-                in: 'body',
-                description: 'nuevo Artículo',
-                schema: { $ref: '#/definitions/Articulos' }
-    } */
   try {
     let data = await db.entrenadores.create({
       nombreEntrenador: req.body.nombreEntrenador,
       fechaNacimiento: req.body.fechaNacimiento,
-      CodigoDeBañosExperienciaarra: req.body.añosExperiencia,
+      añosExperiencia: req.body.añosExperiencia,
       id_tipoEntrenador: req.body.id_tipoEntrenador,
       tieneClub: req.body.tieneClub,
       clubActual: req.body.clubActual,
-      Suspendido: req.body.Suspendido,
+      Activo: req.body.Activo,
     });
     res.status(200).json(data.dataValues); // devolvemos el registro agregado!
   } catch (err) {
@@ -107,7 +104,7 @@ router.put("/api/entrenadores/:id", async (req, res) => {
         "id_tipoEntrenador",
         "tieneClub",
         "clubActual",
-        "Suspendido",
+        "Activo",
       ],
       where: { id_Entrenador: req.params.id },
     });
@@ -121,7 +118,7 @@ router.put("/api/entrenadores/:id", async (req, res) => {
     item.id_tipoEntrenador = req.body.id_tipoEntrenador;
     item.tieneClub = req.tieneClub.Stock;
     item.clubActual = req.body.clubActual;
-    item.Suspendido = req.body.Suspendido;
+    item.Activo = req.body.Activo;
     await item.save();
 
     res.sendStatus(204);
@@ -155,17 +152,17 @@ router.delete("/api/entrenadores/:id", async (req, res) => {
 });
 
 //Modificar el estado de un equipo
-router.put("/api/entrenadores/suspender/:id", async (req, res) => {
+router.put("/api/entrenadores/activar/:id", async (req, res) => {
   try {
     let item = await db.entrenadores.findOne({
-      attributes: ["id_Entrenador", "Suspendido"],
+      attributes: ["id_Entrenador", "Activo"],
       where: { id_Entrenador: req.params.id },
     });
     if (!item) {
-      res.status(404).json({ message: "Equipo no encontrado" });
+      res.status(404).json({ message: "Entrenador no encontrado" });
       return;
     }
-    item.Suspendido = req.body.Suspendido;
+    item.Activo = req.body.Activo;
     await item.save();
 
     res.sendStatus(204);

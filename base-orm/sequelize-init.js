@@ -28,14 +28,6 @@ const tipoEntrenador = sequelize.define(
     },
   },
   {
-    hooks: {
-      beforeValidate: function (tipoEntrenador, options) {
-        if (typeof tipoEntrenador.nombreTipoEntrenador === "string") {
-          tipoEntrenador.nombreTipoEntrenador =
-            tipoEntrenador.nombreTipoEntrenador.toUpperCase().trim();
-        }
-      },
-    },
     timestamps: false,
   }
 );
@@ -122,26 +114,18 @@ const entrenadores = sequelize.define(
         },
       },
     },
-    Suspendido: {
+    Activo: {
       type: DataTypes.BOOLEAN,
       allowNull: false,
-      defaultValue: false,
-      notNull: {
-        args: true,
-        msg: "Suspendido requerido",
+      validate: {
+        notNull: {
+          args: true,
+          msg: "Activo es requerido",
+        },
       },
     },
   },
   {
-    hooks: {
-      beforeValidate: function (entrenador, options) {
-        if (typeof entrenador.nombreEntrenador === "string") {
-          entrenador.nombreEntrenador = entrenador.nombreEntrenador
-            .toUpperCase()
-            .trim();
-        }
-      },
-    },
     timestamps: false,
   }
 );

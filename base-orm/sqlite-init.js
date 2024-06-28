@@ -10,21 +10,21 @@ async function CrearBaseSiNoExiste() {
   // Verificar si la tabla TipoEntrenador existe, si no existe, crearla
   existe = false;
   res = await db.get(
-    "SELECT count(*) as contar FROM sqlite_schema WHERE type = 'table' and name= 'TipoEntrenador'",
+    "SELECT count(*) as contar FROM sqlite_schema WHERE type = 'table' and name= 'tipoEntrenador'",
     []
   );
   if (res.contar > 0) existe = true;
   if (!existe) {
     await db.run(
-      `CREATE TABLE TipoEntrenador( 
+      `CREATE TABLE tipoEntrenador( 
               id_tipoEntrenador INTEGER PRIMARY KEY AUTOINCREMENT,
               nombreTipoEntrenador TEXT NOT NULL 
             );`
     );
-    console.log("Tabla TipoEntrenador creada!");
+    console.log("Tabla tipoEntrenador creada!");
 
     await db.run(
-      `INSERT OR IGNORE INTO TipoEntrenador (id_tipoEntrenador, nombreTipoEntrenador)
+      `INSERT INTO tipoEntrenador (id_tipoEntrenador, nombreTipoEntrenador)
       VALUES
         (1, 'Director Técnico'),
         (2, 'Preparador Físico'),
@@ -51,25 +51,25 @@ async function CrearBaseSiNoExiste() {
               id_tipoEntrenador INTEGER,
               tieneClub BOOLEAN,
               clubActual TEXT,
-              Suspendido BOOLEAN NOT NULL DEFAULT 0,
+              Activo BOOLEAN,
               FOREIGN KEY (id_tipoEntrenador) REFERENCES TipoEntrenador(id_tipoEntrenador)
             );`
     );
     console.log("Tabla entrenadores creada!");
     // Insertar entrenadores
     await db.run(
-      `INSERT INTO entrenadores (id_Entrenador, nombreEntrenador, fechaNacimiento, añosExperiencia, id_tipoEntrenador, tieneClub, clubActual, Suspendido)
+      `INSERT INTO entrenadores (id_Entrenador, nombreEntrenador, fechaNacimiento, añosExperiencia, id_tipoEntrenador, tieneClub, clubActual, Activo)
     VALUES
-      (1,'Diego Simeone', '1970-04-28', 15, 1, true, 'Atletico de Madrid',0),
-      (2,'Marcelo Bielsa', '1955-07-21', 25, 1, true, 'Leeds United',0),
-      (3,'Pep Guardiola', '1971-01-18', 20, 1, true, 'Manchester City',0),
-      (4,'Juan Carlos Osorio', '1961-06-08', 22, 2, true, 'Atletico Nacional',0),
-      (5,'Francisco Ayestaran', '1963-02-22', 18, 3, false, 'Barcelona',0),
-      (6,'Jorge Desio', '1976-08-15', 12, 4, true, 'Real Madrid',0),
-      (7,'Carlos Velasco Carballo', '1971-03-17', 10, 5, false, 'Racing',0),
-      (8,'Rafael Guerrero', '1980-09-12', 8, 2, true, 'Sevilla FC',0),
-      (9,'Pepe Conde', '1985-11-05', 5, 3, false, 'Talleres',0),
-      (10,'Marta López', '1990-07-30', 3, 5, false, 'Independiente',0);`
+      (1, 'Diego Simeone', '1970-04-28', 15, 1, true, 'Atletico de Madrid', 1),
+      (2, 'Marcelo Bielsa', '1955-07-21', 25, 1, true, 'Leeds United', 1),
+      (3, 'Pep Guardiola', '1971-01-18', 20, 1, true, 'Manchester City', 1),
+      (4, 'Juan Carlos Osorio', '1961-06-08', 22, 2, true, 'Atletico Nacional', 1),
+      (5, 'Francisco Ayestaran', '1963-02-22', 18, 3, false, 'Barcelona', 1),
+      (6, 'Jorge Desio', '1976-08-15', 12, 4, true, 'Real Madrid', 1),
+      (7, 'Carlos Velasco Carballo', '1971-03-17', 10, 5, false, 'Racing', 1),
+      (8, 'Rafael Guerrero', '1980-09-12', 8, 2, true, 'Sevilla FC', 1),
+      (9, 'Pepe Conde', '1985-11-05', 5, 3, false, 'Talleres', 1),
+      (10, 'Marta López', '1990-07-30', 3, 5, false, 'Independiente', 1);`
     );
   }
 
@@ -83,11 +83,11 @@ async function CrearBaseSiNoExiste() {
   if (res.contar > 0) existe = true;
   if (!existe) {
     await db.run(
-      "CREATE table ciudades( idCiudad INTEGER PRIMARY KEY AUTOINCREMENT, nombreCiudad text NOT NULL UNIQUE);"
+      `CREATE table ciudades( idCiudad INTEGER PRIMARY KEY AUTOINCREMENT, nombreCiudad text NOT NULL UNIQUE);`
     );
     console.log("tabla ciudades creada!");
     await db.run(
-      `insert into ciudades values
+      `insert into ciudades (idCiudad, nombreCiudad) VALUES
       (1, 'Buenos Aires'),
       (2, 'Madrid'),
       (3, 'Barcelona'),
@@ -97,8 +97,7 @@ async function CrearBaseSiNoExiste() {
       (7, 'Paris'),
       (8, 'Rio de Janeiro'),
       (9, 'Londres'),
-      (10, 'Montevideo')
-      ;`
+      (10, 'Montevideo');`
     );
   }
 
@@ -114,19 +113,19 @@ async function CrearBaseSiNoExiste() {
   if (!existe) {
     await db.run(
       `CREATE table clubes( 
-              idClub INTEGER PRIMARY KEY AUTOINCREMENT
-            , nombreClub text NOT NULL UNIQUE
-            , fechaCreacion text
-            , torneosGanados integer
-            , activo boolean
-            , idCiudad integer
-            , FOREIGN KEY (idCiudad) REFERENCES ciudades(idCiudad)
+              idClub INTEGER PRIMARY KEY AUTOINCREMENT,
+              nombreClub text NOT NULL UNIQUE,
+              fechaCreacion text,
+              torneosGanados integer,
+              activo boolean,
+              idCiudad integer,
+              FOREIGN KEY (idCiudad) REFERENCES ciudades(idCiudad)
             );`
     );
     console.log("tabla clubes creada!");
 
     await db.run(
-      `insert into clubes values
+      `insert into clubes (idClub, nombreClub, fechaCreacion, torneosGanados, activo, idCiudad) VALUES
       (1, 'Club Atlético Boca Juniors', '1905-04-03', 68, 1, 1),
       (2, 'Club Atlético River Plate', '1901-05-25', 66, 1, 1),
       (3, 'Club de Fútbol Barcelona', '1899-11-29', 96, 1, 3),
@@ -136,8 +135,7 @@ async function CrearBaseSiNoExiste() {
       (7, 'Bayern Munich', '1900-02-27', 76, 1, 6),
       (8, 'Paris Saint-Germain', '1970-08-12', 43, 1, 7),
       (9, 'Flamengo', '1895-11-17', 43, 1, 8),
-      (10, 'Club Atlético de Madrid', '1903-04-26', 42, 1, 2)
-      ;`
+      (10, 'Club Atlético de Madrid', '1903-04-26', 42, 1, 2);`
     );
   }
 
