@@ -42,7 +42,7 @@ describe("GET /api/ciudades/:id", function () {
     expect(res.statusCode).toEqual(404);
     expect(res.body).toEqual(
       expect.objectContaining({
-        mensaje: 'No encontrado!!',
+        mensaje: "No encontrado!!",
       })
     );
   });

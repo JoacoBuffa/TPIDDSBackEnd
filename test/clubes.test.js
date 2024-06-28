@@ -10,7 +10,9 @@ const clubAlta = {
 };
 
 const clubModificacion = {
-  nombreClub: "Club Modificado " + (() => (Math.random() + 1).toString(36).substring(2))(),
+  nombreClub:
+    "Club Modificado " +
+    (() => (Math.random() + 1).toString(36).substring(2))(),
   fechaCreacion: new Date().toISOString(),
   torneosGanados: 10,
   activo: false,
@@ -44,7 +46,9 @@ describe("GET /api/clubes", () => {
 // test route/clubes GET con filtros
 describe("GET /api/clubes con filtros", () => {
   it("Debería devolver los clubes según filtro", async () => {
-    const res = await request(app).get("/api/clubes?nombreClub=Real&activo=true&Pagina=1");
+    const res = await request(app).get(
+      "/api/clubes?nombreClub=Real&activo=true&Pagina=1"
+    );
     expect(res.statusCode).toEqual(200);
 
     expect(verificarPropiedades(res.body.Items)).toEqual(true);
@@ -99,9 +103,7 @@ describe("POST /api/clubes", () => {
 // test route/clubes/:id PUT
 describe("PUT /api/clubes/:id", () => {
   it("Debería devolver el club con el id 3 modificado", async () => {
-    const res = await request(app)
-      .put("/api/clubes/3")
-      .send(clubModificacion);
+    const res = await request(app).put("/api/clubes/3").send(clubModificacion);
     expect(res.statusCode).toEqual(204);
   });
 });
@@ -113,7 +115,7 @@ describe("DELETE /api/clubes/:id", () => {
     expect(res.statusCode).toEqual(200);
     expect(res.body).toEqual(
       expect.objectContaining({
-        message: "club eliminado correctamente"
+        message: "club eliminado correctamente",
       })
     );
   });
