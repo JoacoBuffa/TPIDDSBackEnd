@@ -243,6 +243,139 @@ ciudades.hasOne(clubes, { foreignKey: "idCiudad" });
 entrenadores.belongsTo(tipoEntrenador, { foreignKey: "id_tipoEntrenador" });
 tipoEntrenador.hasOne(entrenadores, { foreignKey: "id_tipoEntrenador" });
 
+
+// Definición del modelo posiciones
+const posiciones = sequelize.define(
+  "posiciones",
+  {
+    IdPosicion: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      autoIncrement: true,
+    },
+    Nombre: {
+      // todo evitar que string autocomplete con espacios en blanco, debería ser varchar sin espacios
+      type: DataTypes.STRING(30),
+      allowNull: false,
+      validate: {
+        notEmpty: {
+          args: true,
+          msg: "Nombre es requerido",
+        },
+        len: {
+          args: [5, 30],
+          msg: "Nombre debe ser tipo caracteres, entre 5 y 30 de longitud",
+        },
+      },
+    },
+  },
+  {
+    timestamps: false,
+  }
+);
+
+// Definición del modelo jugadores
+const jugadores = sequelize.define(
+  "jugadores",
+  {
+    IdJugador: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      autoIncrement: true,
+    },
+    NombreApellido: {
+      type: DataTypes.STRING(60),
+      allowNull: false,
+      validate: {
+        notEmpty: {
+          args: true,
+          msg: "Nombre y apellido es requerido",
+        },
+        len: {
+          args: [5, 60],
+          msg: "Nombre y apellido debe ser tipo caracteres, entre 5 y 60 de longitud",
+        },
+      },
+      unique: {
+        args: true,
+        msg: "este Nombre y apellido ya existe en la tabla!",
+      },
+    },
+    Dni: { 
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      validate: {
+        notNull: {
+          args: true,
+          msg: "DNI es requerido",
+        },
+      }
+    },
+    FechaNacimiento: {
+      type: DataTypes.DATEONLY,
+      allowNull: false,
+      validate: {
+        notNull: {
+          args: true,
+          msg: "Fecha Nacimiento es requerido",
+        },
+      }
+    },
+    Peso: {
+      type: DataTypes.DECIMAL(10, 2),
+      allowNull: false,
+      validate: {
+        notNull: {
+          args: true,
+          msg: "Peso es requerido",
+        }
+      }
+    },
+    Altura: {
+      type: DataTypes.DECIMAL(10, 2),
+      allowNull: false,
+      validate: {
+        notNull: {
+          args: true,
+          msg: "Altura es requerido",
+        }
+      }
+    },
+    IdPosicion: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      validate: {
+        notNull: {
+          args: true,
+          msg: "IdPosicion es requerido",
+        }
+      }
+    },
+    Activo: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      validate: {
+        notNull: {
+          args: true,
+          msg: "Activo es requerido",
+        }
+      }
+    },
+  },
+  {
+    timestamps: false,
+  }
+);
+
+
+
+
+module.exports = {
+  sequelize,
+  posiciones,
+  jugadores,
+  
+};
 // Sincronizar modelos con la base de datos (opcional si se quiere crear automáticamente las tablas)
 // sequelize.sync();
 

@@ -47,6 +47,12 @@ app.use(clubesRouter);
 const ciudadesRouter = require("./routes/ciudades");
 app.use(ciudadesRouter);
 
+const jugadoresRouter = require("./routes/jugadores");
+app.use(jugadoresRouter);
+
+const posicionesRouter = require("./routes/posiciones");
+app.use(posicionesRouter);
+
 // levantar servidor
 if (!module.parent) {
   // si no es llamado por otro módulo, es decir, si es el módulo principal -> levantamos el servidor
