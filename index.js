@@ -53,6 +53,12 @@ app.use(jugadoresRouter);
 const posicionesRouter = require("./routes/posiciones");
 app.use(posicionesRouter);
 
+const torneosRouter = require("./routes/torneos");
+app.use(torneosRouter);
+
+const temporadasRouter = require("./routes/temporadas");
+app.use(temporadasRouter);
+
 // levantar servidor
 if (!module.parent) {
   // si no es llamado por otro módulo, es decir, si es el módulo principal -> levantamos el servidor

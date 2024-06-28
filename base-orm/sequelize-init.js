@@ -366,6 +366,146 @@ const jugadores = sequelize.define(
   }
 );
 
+// TEMPORADAS definicion de modelo
+
+const temporadas = sequelize.define(
+  "temporadas",
+  {
+    Id_Temporada: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      autoIncrement: true,
+    },
+    Año: {
+      type: DataTypes.STRING(9),
+      allowNull: false,
+      validate: {
+        notEmpty: {
+          args: true,
+          msg: "Años de temporada es requerido",
+        },
+        len: {
+          args: [4,9],
+          msg: "Años de temporada debe tener entre 4 y 9 caracteres de longitud",
+        },
+      },
+      unique: {
+        args: true,
+        msg: "La temporada de este/estos años ya esta creada!",
+      },
+    },
+
+    FechaDesde: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        notNull: {
+          args: true,
+          msg: "fecha de inicio de temporada es requerido",
+        },
+      },
+    },
+
+    FechaHasta: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        notNull: {
+          args: true,
+          msg: "fecha de fin de temporada es requerido",
+        },
+      },
+    },
+  },
+  {
+    timestamps: false,
+  }
+);
+
+
+// torneos definicion de modelo
+
+const torneos = sequelize.define(
+  "torneos",
+  {
+    ID_Torneo: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      autoIncrement: true,
+    },
+    Nombre_torneo: {
+      type: DataTypes.STRING(60),
+      allowNull: false,
+      validate: {
+        notEmpty: {
+          args: true,
+          msg: "Nombre del torneo es requerido",
+        },
+        len: {
+          args: [5, 60],
+          msg: "Nombre del torneo debe ser tipo caracteres, entre 5 y 60 de longitud",
+        },
+      },
+      unique: {
+        args: true,
+        msg: "este Nombre ya existe en la tabla!",
+      },
+    },
+
+    fechaDeFinal: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        notNull: {
+          args: true,
+          msg: "fecha de final es requerido",
+        },
+      },
+    },
+
+    PromedioGoles: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      validate: {
+        notNull: {
+          args: true,
+          msg: "promedio de goles del torneo es requerido",
+        },
+      },
+    },
+
+    Finalizado: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      validate: {
+        notNull: {
+          args: true,
+          msg: "Finalizado es requerido",
+        },
+      },
+    },
+
+    Id_Temporada: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      validate: {
+        notNull: {
+          args: true,
+          msg: "Temporada es requerido",
+        },
+      },
+    },
+  },
+  {
+    timestamps: false,
+  }
+);
+
+torneos.belongsTo(temporadas, { foreignKey: "Id_Temporada" });
+temporadas.hasOne(torneos, { foreignKey: "Id_Temporada" });
+
+
+
 // Sincronizar modelos con la base de datos (opcional si se quiere crear automáticamente las tablas)
 // sequelize.sync();
 
@@ -377,4 +517,6 @@ module.exports = {
   clubes,
   posiciones,
   jugadores,
+  temporadas,
+  torneos
 };

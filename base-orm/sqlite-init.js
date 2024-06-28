@@ -195,6 +195,84 @@ async function CrearBaseSiNoExiste() {
     );
   }
 
+     // TEMPORADAS
+
+     existe = false;
+     res = await db.get(
+       "SELECT count(*) as contar FROM sqlite_schema WHERE type = 'table' and name= 'temporadas'",
+       []
+     );
+     if (res.contar > 0) existe = true;
+   
+     if (!existe) {
+       await db.run(
+         `CREATE table temporadas( 
+                 Id_Temporada INTEGER PRIMARY KEY AUTOINCREMENT
+               , Año text NOT NULL UNIQUE
+               , FechaDesde text
+               , FechaHasta text
+               );`
+       );
+       console.log("tabla temporadas creada!");
+   
+       await db.run(
+         `insert into temporadas values
+         (1, '2023/2024', '2023-07-01','2024-06-30'),
+         (2, '2022/2023', '2022-07-01', '2023-06-30'),
+         (3, '2021/2022', '2021-07-01','2022-06-30'),
+         (4, '2020/2021', '2020-07-01','2021-06-30'),
+         (5, '2019/2020', '2019-07-01','2020-06-30'),
+         (6, '2018/2019', '2018-07-01','2019-06-30'),
+         (7, '2017/2018', '2017-07-01','2018-06-30'),
+         (8, '2016/2017', '2016-07-01','2017-06-30'),
+         (9, '2015/2016', '2015-07-01','2016-06-30'),
+         (10, '2014/2015', '2014-07-01','2015-06-30')
+         ;`
+       );
+     }
+   
+   // TORNEOS
+ 
+   existe = false;
+   res = await db.get(
+     "SELECT count(*) as contar FROM sqlite_schema WHERE type = 'table' and name= 'torneos'",
+     []
+   );
+   if (res.contar > 0) existe = true;
+ 
+   if (!existe) {
+     await db.run(
+       `CREATE table torneos( 
+               ID_Torneo INTEGER PRIMARY KEY AUTOINCREMENT
+             , Nombre_torneo text NOT NULL UNIQUE
+             , fechaDeFinal text
+             , PromedioGoles integer
+             , Finalizado boolean
+             , Id_Temporada integer
+             , FOREIGN KEY (Id_Temporada) REFERENCES temporadas(Id_Temporada)
+             );`
+     );
+     console.log("tabla torneos creada!");
+ 
+     await db.run(
+       `insert into torneos values
+       (1, 'Copa America', '1905-04-03', 4.3, 1, 4),
+       (2, 'Champions League', '1901-05-25', 66, 1, 1),
+       (3, 'Copa Argentina', '1899-11-29', 96, 1, 3),
+       (4, 'Premier League', '1902-03-06', 101, 1, 2),
+       (5, 'Europa League', '1878-10-15', 66, 1, 5),
+       (6, 'Brasileirao', '1897-11-01', 69, 1, 4),
+       (7, 'Escudetto', '1900-02-27', 76, 1, 6),
+       (8, 'Liga Profesional', '1970-08-12', 43, 1, 7),
+       (9, 'Copa del Mundo', '1895-11-17', 43, 1, 8),
+       (10, 'Eurocopa', '1903-04-26', 42, 1, 2)
+       ;`
+     );
+     
+ 
+   }
+ 
+ 
   // Cerrar la base de datos
   await db.close();
 }
